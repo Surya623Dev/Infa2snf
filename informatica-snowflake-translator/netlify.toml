@@ -1,0 +1,31 @@
+[build]
+  command = "npm run build"
+  functions = "netlify/functions"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+  PYTHON_VERSION = "3.9"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[functions]
+  python_runtime = "python3.9"
+  timeout = 26
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
