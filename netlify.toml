@@ -1,5 +1,5 @@
 [build]
-  command = "cd informatica-snowflake-translator && npm run build"
+  command = "cd informatica-snowflake-translator && npm install && npm run build"
   functions = "netlify/functions"
   publish = "informatica-snowflake-translator/dist"
 
@@ -18,6 +18,9 @@
   to = "/index.html"
   status = 200
 
+[functions]
+  python_runtime = "python3.9"
+  timeout = 26
 
 [[headers]]
   for = "/api/*"
