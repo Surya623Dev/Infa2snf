@@ -19,8 +19,7 @@
   status = 200
 
 [functions]
-  python_runtime = "python3.9"
-  timeout = 26
+  directory = "netlify/functions"
 
 [[headers]]
   for = "/api/*"
