@@ -1,4 +1,4 @@
-import { Session, SessionStatus, UploadedFile, ProcessingProgress } from '../types/TranslationTypes';
+import type { Session, SessionStatus, UploadedFile, ProcessingProgress } from '../types/TranslationTypes';
 import { STORAGE_KEYS, PROCESSING } from '../config/constants';
 
 class SessionService {

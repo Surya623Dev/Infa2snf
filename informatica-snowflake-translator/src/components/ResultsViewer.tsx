@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Download,
   File,
@@ -8,15 +8,10 @@ import {
   TestTube,
   Archive,
   Eye,
-  ExternalLink,
-  CheckCircle,
-  AlertCircle,
   Copy,
   X,
 } from 'lucide-react';
-import { GeneratedFile, ProcessingResults } from '../types/TranslationTypes';
-import { apiService } from '../services/ApiService';
-import { API_ENDPOINTS } from '../config/constants';
+import type { GeneratedFile, ProcessingResults } from '../types/TranslationTypes';
 import toast from 'react-hot-toast';
 
 export interface ResultsViewerProps {

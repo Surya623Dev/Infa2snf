@@ -1,9 +1,9 @@
 import React, { useCallback, useState, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Upload, File, X, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
-import { UploadedFile, ValidationResult } from '../types/TranslationTypes';
+import type { UploadedFile } from '../types/TranslationTypes';
 import { fileUploadService } from '../services/FileUploadService';
-import { FILE_CONSTRAINTS, ERROR_MESSAGES } from '../config/constants';
+import { FILE_CONSTRAINTS } from '../config/constants';
 
 export interface UploadZoneProps {
   onFilesUploaded: (files: UploadedFile[]) => void;
@@ -113,8 +113,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
 
       // Convert FileWithPreview back to File for upload
       const filesToUpload = files.map((file) => {
-        const { id, status, progress, error, ...fileData } = file;
-        return new File([file], file.name, { type: file.type });
+        // Return the file as-is since it's already a File object with additional properties
+        return file as File;
       });
 
       // Upload files with progress tracking

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { UploadZone } from './components/UploadZone';
 import { ProgressDashboard } from './components/ProgressDashboard';
 import { sessionService } from './services/SessionService';
 import { apiService } from './services/ApiService';
-import { UploadedFile, Session, ProcessingProgress } from './types/TranslationTypes';
+import type { UploadedFile, Session } from './types/TranslationTypes';
 import { API_ENDPOINTS, SUCCESS_MESSAGES } from './config/constants';
 import { Database, Zap, FileText, Shield, Github } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -71,7 +71,7 @@ function App() {
   };
 
   // Handle processing completion
-  const handleProcessingComplete = (progress: ProcessingProgress) => {
+  const handleProcessingComplete = () => {
     setIsProcessing(false);
     setStep('completed');
     sessionService.updateSessionStatus('completed');

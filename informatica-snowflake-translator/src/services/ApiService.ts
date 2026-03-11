@@ -1,6 +1,6 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ApiResponse, ApiError, RequestConfig } from '../types/ApiTypes';
-import { API_ENDPOINTS, DEV_FLAGS } from '../config/constants';
+import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios';
+import type { ApiResponse, ApiError, RequestConfig } from '../types/ApiTypes';
+import { DEV_FLAGS } from '../config/constants';
 
 class ApiService {
   private client: AxiosInstance;
@@ -96,7 +96,7 @@ class ApiService {
         throw new Error(response.data.error || 'API request failed');
       }
 
-      return response.data.data || response.data;
+      return (response.data.data || response.data) as T;
     } catch (error) {
       throw error;
     }
@@ -170,7 +170,7 @@ class ApiService {
         throw new Error(response.data.error || 'File upload failed');
       }
 
-      return response.data.data || response.data;
+      return (response.data.data || response.data) as T;
     } catch (error) {
       throw this.handleError(error);
     }

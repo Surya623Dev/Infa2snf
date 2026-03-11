@@ -1,7 +1,6 @@
 import { apiService } from './ApiService';
 import { sessionService } from './SessionService';
-import { ProcessingProgress, PhaseType, PhaseStatus } from '../types/TranslationTypes';
-import { PollingConfig } from '../types/ApiTypes';
+import type { ProcessingProgress, PhaseType, PhaseStatus } from '../types/TranslationTypes';
 import { API_ENDPOINTS, PROCESSING, DEV_FLAGS } from '../config/constants';
 
 export interface ProgressUpdateCallback {
@@ -17,7 +16,7 @@ export interface ProgressErrorCallback {
 }
 
 class ProgressService {
-  private pollingIntervals: Map<string, NodeJS.Timeout> = new Map();
+  private pollingIntervals: Map<string, number> = new Map();
   private callbacks: Map<string, {
     onUpdate?: ProgressUpdateCallback;
     onComplete?: ProgressCompleteCallback;
@@ -128,7 +127,6 @@ class ProgressService {
     // Determine current phase
     let currentPhase: PhaseType = 'Phase A';
     const phases = PROCESSING.PHASES;
-    const phaseProgress = overallProgress / phases.length;
 
     const phaseStatuses: Record<PhaseType, PhaseStatus> = {
       'Phase A': 'pending',
@@ -269,7 +267,7 @@ class ProgressService {
 
   // Clean up all polling
   cleanup(): void {
-    this.pollingIntervals.forEach((interval, sessionId) => {
+    this.pollingIntervals.forEach((_, sessionId) => {
       this.stopPolling(sessionId);
     });
   }

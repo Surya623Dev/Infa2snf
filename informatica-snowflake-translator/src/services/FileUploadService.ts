@@ -1,7 +1,7 @@
 import { apiService } from './ApiService';
 import { sessionService } from './SessionService';
-import { UploadedFile, ValidationResult } from '../types/TranslationTypes';
-import { FileUploadOptions, XMLValidationResult } from '../types/ApiTypes';
+import type { UploadedFile, ValidationResult } from '../types/TranslationTypes';
+import type { FileUploadOptions, XMLValidationResult } from '../types/ApiTypes';
 import {
   API_ENDPOINTS,
   FILE_CONSTRAINTS,
@@ -63,12 +63,12 @@ class FileUploadService {
 
     // Extension validation
     const extension = this.getFileExtension(file.name).toLowerCase();
-    if (!FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS.includes(extension)) {
+    if (!FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS.includes(extension as any)) {
       errors.push(`${prefix} ${ERROR_MESSAGES.INVALID_FILE_TYPE}`);
     }
 
     // MIME type validation
-    if (file.type && !FILE_CONSTRAINTS.SUPPORTED_MIME_TYPES.includes(file.type)) {
+    if (file.type && !FILE_CONSTRAINTS.SUPPORTED_MIME_TYPES.includes(file.type as any)) {
       warnings.push(`${prefix} Unexpected MIME type: ${file.type}`);
     }
 
@@ -323,7 +323,7 @@ class FileUploadService {
         uploadedAt: new Date(),
       }));
 
-      const session = sessionService.createSession(uploadedFiles);
+      sessionService.createSession(uploadedFiles);
 
       return {
         success: true,

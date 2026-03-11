@@ -1,4 +1,4 @@
-import { AppConfig } from '../types/ConfigTypes';
+import type { AppConfig } from '../types/ConfigTypes';
 
 // API endpoints
 export const API_ENDPOINTS = {
@@ -79,9 +79,9 @@ export const DEFAULT_CONFIG: AppConfig = {
   etlParamsRepoPath: 'G:\\Projects\\BA\\etl-server-params 1\\etl-server-params\\',
   maxFileSize: FILE_CONSTRAINTS.MAX_FILE_SIZE,
   sessionTimeout: PROCESSING.SESSION_TIMEOUT,
-  supportedFileTypes: FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS,
+  supportedFileTypes: [...FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS] as string[],
   netlifyConfig: {
-    siteId: process.env.NETLIFY_SITE_ID || '',
+    siteId: import.meta.env.NETLIFY_SITE_ID || '',
     functionTimeout: 26000, // 26 seconds
     blobStorageEnabled: true,
   },
@@ -164,8 +164,8 @@ export const STORAGE_KEYS = {
 
 // Development flags
 export const DEV_FLAGS = {
-  MOCK_API: process.env.NODE_ENV === 'development',
-  ENABLE_LOGGING: process.env.NODE_ENV === 'development',
+  MOCK_API: import.meta.env.DEV === true,
+  ENABLE_LOGGING: import.meta.env.DEV === true,
   SKIP_VALIDATION: false,
-  DEBUG_MODE: process.env.NODE_ENV === 'development',
+  DEBUG_MODE: import.meta.env.DEV === true,
 } as const;

@@ -15,6 +15,13 @@ export interface ApiError {
   details?: any;
 }
 
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+}
+
 // File upload types
 export interface FileUploadOptions {
   sessionId?: string;

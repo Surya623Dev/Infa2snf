@@ -12,7 +12,7 @@ import {
   FolderOpen,
   Download,
 } from 'lucide-react';
-import { ProcessingProgress, PhaseType, PhaseStatus } from '../types/TranslationTypes';
+import type { ProcessingProgress, PhaseType, PhaseStatus } from '../types/TranslationTypes';
 import { progressService } from '../services/ProgressService';
 import { PROCESSING } from '../config/constants';
 
