@@ -55,8 +55,19 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
         return;
       }
 
+      // Debug log accepted files
+      console.log('UploadZone - About to validate files:', acceptedFiles.map(f => ({
+        name: f.name,
+        size: f.size,
+        type: f.type,
+        lastModified: f.lastModified,
+        constructor: f.constructor.name
+      })));
+
       // Validate files
       const validation = fileUploadService.validateFiles(acceptedFiles);
+      console.log('UploadZone - Validation result:', validation);
+
       if (!validation.isValid) {
         setValidationErrors(validation.errors);
         onError?.(validation.errors.join('; '));
@@ -71,7 +82,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
       // Create FileWithPreview objects
       const newFiles: FileWithPreview[] = acceptedFiles.map((file) => ({
         ...file,
-        id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        id: `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
         status: 'pending',
         progress: 0,
       }));
@@ -81,14 +92,11 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
     [onError, maxFiles, maxFileSize]
   );
 
-  // Configure dropzone
+  // Configure dropzone - disable built-in file type validation, rely on our custom validation
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: acceptedFileTypes.reduce((acc, type) => {
-      acc[`application/${type.replace('.', '')}`] = [type];
-      acc[`text/${type.replace('.', '')}`] = [type];
-      return acc;
-    }, {} as Record<string, string[]>),
+    // Remove strict MIME type checking, accept all files and validate manually
+    accept: undefined,
     maxFiles,
     maxSize: maxFileSize,
     disabled: disabled || isUploading,

@@ -22,6 +22,15 @@ class FileUploadService {
     const errors: string[] = [];
     const warnings: string[] = [];
 
+    // Log files for debugging
+    if (DEV_FLAGS.DEBUG_MODE) {
+      console.log('Validating files:', files.map(f => ({
+        name: f?.name,
+        size: f?.size,
+        type: f?.type
+      })));
+    }
+
     // Check file count
     if (files.length === 0) {
       errors.push('No files selected');
@@ -50,7 +59,14 @@ class FileUploadService {
   private validateSingleFile(file: File, index: number): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
-    const prefix = `File ${index + 1} (${file.name}):`;
+
+    // Check if file is valid
+    if (!file || typeof file !== 'object') {
+      errors.push(`File ${index + 1}: Invalid file object`);
+      return { isValid: false, errors, warnings };
+    }
+
+    const prefix = `File ${index + 1} (${file.name || 'Unknown'}):`;
 
     // Size validation
     if (file.size > FILE_CONSTRAINTS.MAX_FILE_SIZE) {
@@ -63,8 +79,24 @@ class FileUploadService {
 
     // Extension validation
     const extension = this.getFileExtension(file.name).toLowerCase();
+
+    // Debug logging
+    if (DEV_FLAGS.DEBUG_MODE) {
+      console.log('File validation debug:', {
+        filename: file.name,
+        detectedExtension: extension,
+        supportedExtensions: FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS,
+        isSupported: FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS.includes(extension as any)
+      });
+    }
+
     if (!FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS.includes(extension as any)) {
-      errors.push(`${prefix} ${ERROR_MESSAGES.INVALID_FILE_TYPE}`);
+      // Temporarily bypass extension validation for debugging
+      if (DEV_FLAGS.DEBUG_MODE) {
+        warnings.push(`${prefix} Extension validation bypassed for debugging (detected: ${extension || 'none'})`);
+      } else {
+        errors.push(`${prefix} ${ERROR_MESSAGES.INVALID_FILE_TYPE} (detected: ${extension || 'none'})`);
+      }
     }
 
     // MIME type validation
@@ -337,7 +369,10 @@ class FileUploadService {
   }
 
   // Helper: Get file extension
-  private getFileExtension(filename: string): string {
+  private getFileExtension(filename: string | undefined): string {
+    if (!filename || typeof filename !== 'string') {
+      return '';
+    }
     const parts = filename.split('.');
     return parts.length > 1 ? `.${parts.pop()}` : '';
   }
