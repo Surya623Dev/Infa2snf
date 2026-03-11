@@ -80,23 +80,22 @@ class FileUploadService {
     // Extension validation
     const extension = this.getFileExtension(file.name).toLowerCase();
 
-    // Debug logging
-    if (DEV_FLAGS.DEBUG_MODE) {
-      console.log('File validation debug:', {
-        filename: file.name,
-        detectedExtension: extension,
-        supportedExtensions: FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS,
-        isSupported: FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS.includes(extension as any)
-      });
-    }
+    // Always log for debugging (both dev and production)
+    console.log('File validation debug:', {
+      filename: file.name,
+      detectedExtension: extension,
+      supportedExtensions: FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS,
+      isSupported: FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS.includes(extension as any),
+      fileSize: file.size,
+      fileType: file.type
+    });
 
-    if (!FILE_CONSTRAINTS.SUPPORTED_EXTENSIONS.includes(extension as any)) {
-      // Temporarily bypass extension validation for debugging
-      if (DEV_FLAGS.DEBUG_MODE) {
-        warnings.push(`${prefix} Extension validation bypassed for debugging (detected: ${extension || 'none'})`);
-      } else {
-        errors.push(`${prefix} ${ERROR_MESSAGES.INVALID_FILE_TYPE} (detected: ${extension || 'none'})`);
-      }
+    // More lenient validation - accept XML and PARAM files
+    const lowerExt = extension.toLowerCase();
+    const validExtensions = ['.xml', '.param'];
+
+    if (!validExtensions.includes(lowerExt)) {
+      errors.push(`${prefix} ${ERROR_MESSAGES.INVALID_FILE_TYPE} (detected: ${extension || 'none'})`);
     }
 
     // MIME type validation
@@ -371,10 +370,20 @@ class FileUploadService {
   // Helper: Get file extension
   private getFileExtension(filename: string | undefined): string {
     if (!filename || typeof filename !== 'string') {
+      console.warn('getFileExtension: Invalid filename:', filename);
       return '';
     }
-    const parts = filename.split('.');
-    return parts.length > 1 ? `.${parts.pop()}` : '';
+
+    // More robust extension detection
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1 || lastDotIndex === filename.length - 1) {
+      console.warn('getFileExtension: No extension found for:', filename);
+      return '';
+    }
+
+    const extension = filename.substring(lastDotIndex).toLowerCase();
+    console.log('getFileExtension: Detected extension', extension, 'for file:', filename);
+    return extension;
   }
 
   // Helper: Create delay
