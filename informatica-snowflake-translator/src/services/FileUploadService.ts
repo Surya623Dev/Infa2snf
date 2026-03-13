@@ -94,13 +94,17 @@ class FileUploadService {
     const lowerExt = extension.toLowerCase();
     const validExtensions = ['.xml', '.param'];
 
-    if (!validExtensions.includes(lowerExt)) {
+    // Only reject if we can clearly identify it's NOT an xml/param file
+    if (extension && !validExtensions.includes(lowerExt)) {
       errors.push(`${prefix} ${ERROR_MESSAGES.INVALID_FILE_TYPE} (detected: ${extension || 'none'})`);
     }
 
-    // MIME type validation
+    // MIME type validation - warn but don't block
     if (file.type && !FILE_CONSTRAINTS.SUPPORTED_MIME_TYPES.includes(file.type as any)) {
-      warnings.push(`${prefix} Unexpected MIME type: ${file.type}`);
+      // Only warn if we have a clear extension that's not supported
+      if (extension && !validExtensions.includes(lowerExt)) {
+        warnings.push(`${prefix} Unexpected MIME type: ${file.type}`);
+      }
     }
 
     // XML file specific validation
