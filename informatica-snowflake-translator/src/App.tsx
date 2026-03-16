@@ -283,26 +283,17 @@ function App() {
               onError={handleProcessingError}
             />
 
-            {/* Next Steps */}
+            <ResultsViewer
+              sessionId={currentSession.id}
+            />
+
             <div className="card bg-primary-50 border-primary-200">
-              <h3 className="text-lg font-semibold text-primary-900 mb-4">
-                🎉 Translation Complete!
-              </h3>
-              <p className="text-primary-800 mb-6">
-                Your Informatica workflows have been successfully translated to Snowflake.
-                Download your migration package to get started with deployment.
-              </p>
-              <div className="flex items-center space-x-4">
-                <button className="btn btn-primary">
-                  Download Migration Package
-                </button>
-                <button
-                  onClick={startNewSession}
-                  className="btn btn-secondary"
-                >
-                  Start New Translation
-                </button>
-              </div>
+              <button
+                onClick={startNewSession}
+                className="btn btn-secondary"
+              >
+                Start New Translation
+              </button>
             </div>
           </div>
         )}

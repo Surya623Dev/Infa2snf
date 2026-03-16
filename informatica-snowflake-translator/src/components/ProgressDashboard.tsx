@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, Loader as Loader2, FileText, Database, Code, TestTube, Settings, FolderOpen, Download } from 'lucide-react';
+import { CheckCircle, Clock, AlertCircle, Loader2, FileText, Database, Code, TestTube, Settings, FolderOpen, Download } from 'lucide-react';
 import type { ProcessingProgress, PhaseType, PhaseStatus } from '../types/TranslationTypes';
 import { progressService } from '../services/ProgressService';
 import { PROCESSING } from '../config/constants';
