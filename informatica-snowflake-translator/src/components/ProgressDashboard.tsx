@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  CheckCircle,
-  Clock,
-  AlertCircle,
-  Loader2,
-  FileText,
-  Database,
-  Code,
-  TestTube,
-  Settings,
-  FolderOpen,
-  Download,
-} from 'lucide-react';
+import { CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, Loader as Loader2, FileText, Database, Code, TestTube, Settings, FolderOpen, Download } from 'lucide-react';
 import type { ProcessingProgress, PhaseType, PhaseStatus } from '../types/TranslationTypes';
 import { progressService } from '../services/ProgressService';
 import { PROCESSING } from '../config/constants';
@@ -68,9 +56,11 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
         setTimeElapsed(elapsed);
 
         // Simple estimation based on current progress
-        if (progressData.overallProgress > 0) {
+        if (progressData.overallProgress > 0 && progressData.overallProgress < 100) {
           const totalEstimated = (elapsed / progressData.overallProgress) * 100;
           setEstimatedTimeRemaining(Math.max(0, totalEstimated - elapsed));
+        } else if (progressData.overallProgress >= 100) {
+          setEstimatedTimeRemaining(0);
         }
       },
       onComplete: (finalProgress) => {
@@ -374,7 +364,14 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
                 </p>
               </div>
             </div>
-            <button className="btn btn-success flex items-center space-x-2">
+            <button
+              onClick={() => {
+                const link = document.createElement('a');
+                link.href = '#results';
+                link.click();
+              }}
+              className="btn btn-success flex items-center space-x-2"
+            >
               <Download size={20} />
               <span>Download Results</span>
             </button>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { UploadZone } from './components/UploadZone';
 import { ProgressDashboard } from './components/ProgressDashboard';
+import { ResultsViewer } from './components/ResultsViewer';
 import { sessionService } from './services/SessionService';
 import { apiService } from './services/ApiService';
 import type { UploadedFile, Session } from './types/TranslationTypes';
