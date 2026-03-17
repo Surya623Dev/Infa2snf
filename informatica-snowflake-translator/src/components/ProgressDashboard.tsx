@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CircleCheck as CheckCircle, Clock, CircleAlert as AlertCircle, Loader as Loader2, FileText, Database, Code, TestTube, Settings, FolderOpen, Download } from 'lucide-react';
+import { Check, Clock, AlertCircle, Loader, FileText, Database, Code, TestTube, Settings, FolderOpen, Download } from 'lucide-react';
 import type { ProcessingProgress, PhaseType, PhaseStatus } from '../types/TranslationTypes';
 import { progressService } from '../services/ProgressService';
 import { PROCESSING } from '../config/constants';
@@ -101,7 +101,7 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
       <div className={`card ${className}`}>
         <div className="flex items-center justify-center py-12">
           <div className="text-center space-y-4">
-            <Loader2 className="mx-auto animate-spin text-primary-600" size={48} />
+            <Loader className="mx-auto animate-spin text-primary-600" size={48} />
             <p className="text-secondary-600">Initializing processing...</p>
           </div>
         </div>
@@ -197,7 +197,7 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
             </div>
             {isComplete && (
               <div className="p-2 bg-success-600 text-white rounded-full">
-                <CheckCircle size={24} />
+                <Check size={24} />
               </div>
             )}
           </div>
@@ -235,10 +235,10 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
                     <h4 className="font-medium text-sm">{phaseConfig.name}</h4>
                     <div className="flex items-center space-x-2">
                       {phaseData.status === 'in_progress' && (
-                        <Loader2 size={16} className="animate-spin" />
+                        <Loader size={16} className="animate-spin" />
                       )}
                       {phaseData.status === 'completed' && (
-                        <CheckCircle size={16} className="text-success-600" />
+                        <Check size={16} className="text-success-600" />
                       )}
                       {phaseData.status === 'error' && (
                         <AlertCircle size={16} className="text-danger-600" />
@@ -353,7 +353,7 @@ export const ProgressDashboard: React.FC<ProgressDashboardProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="p-3 bg-success-600 text-white rounded-full">
-                <CheckCircle size={24} />
+                <Check size={24} />
               </div>
               <div>
                 <h3 className="font-semibold text-success-900">
