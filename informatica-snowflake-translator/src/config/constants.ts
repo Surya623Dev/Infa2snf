@@ -164,7 +164,7 @@ export const STORAGE_KEYS = {
 
 // Development flags
 export const DEV_FLAGS = {
-  MOCK_API: true,
+  MOCK_API: false, // Changed to false to use real Netlify Functions
   ENABLE_LOGGING: import.meta.env.DEV === true,
   SKIP_VALIDATION: false,
   DEBUG_MODE: import.meta.env.DEV === true,
