@@ -1,32 +1,9 @@
-# Core framework
-fastapi==0.104.1
-uvicorn==0.24.0
-python-multipart==0.0.6
+# Netlify Functions - Python Dependencies
+# Most functionality uses Python standard library only
 
-# XML processing
-lxml==5.1.0
-beautifulsoup4==4.12.2
+# For future XML processing (if needed)
+# lxml==5.1.0
 
-# Template generation
-Jinja2==3.1.2
-PyYAML==6.0.1
-
-# Data validation
-pydantic==2.5.0
-
-# File handling
-aiofiles==23.2.1
-python-magic==0.4.27
-
-# Async support
-httpx==0.25.2
-
-# Utilities
-python-dotenv==1.0.0
-uuid==1.30
-
-# Date/time handling
-python-dateutil==2.8.2
-
-# JSON handling
-orjson==3.9.10
+# For future template generation (if needed)
+# Jinja2==3.1.2
+# PyYAML==6.0.1

@@ -1,7 +1,7 @@
 [build]
-  command = "cd informatica-snowflake-translator && npm install && npm run build"
+  command = "npm install && npm run build"
   functions = "netlify/functions"
-  publish = "informatica-snowflake-translator/dist"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "18"
