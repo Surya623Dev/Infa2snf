@@ -1,9 +1,0 @@
-# Netlify Functions - Python Dependencies
-# Most functionality uses Python standard library only
-
-# For future XML processing (if needed)
-# lxml==5.1.0
-
-# For future template generation (if needed)
-# Jinja2==3.1.2
-# PyYAML==6.0.1
