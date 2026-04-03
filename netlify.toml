@@ -1,25 +1,22 @@
 [build]
   command = "cd informatica-snowflake-translator && npm install && npm run build"
-  functions = "informatica-snowflake-translator/netlify/functions"
   publish = "informatica-snowflake-translator/dist"
 
 [build.environment]
-  NODE_VERSION = "20"
-  PYTHON_VERSION = "3.9"
+  NODE_VERSION = "18"
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
 
-# SPA redirect - send all non-API routes to index.html for React Router
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
 [functions]
-  timeout = 26
+  directory = "netlify/functions"
 
 [[headers]]
   for = "/api/*"
