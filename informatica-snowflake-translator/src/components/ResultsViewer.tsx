@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Download,
   File,
@@ -12,8 +12,6 @@ import {
   X,
 } from 'lucide-react';
 import type { GeneratedFile, ProcessingResults } from '../types/TranslationTypes';
-import { apiService } from '../services/ApiService';
-import { API_ENDPOINTS } from '../config/constants';
 import toast from 'react-hot-toast';
 
 export interface ResultsViewerProps {
@@ -55,57 +53,83 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
   const [previewContent, setPreviewContent] = useState<string>('');
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [downloadingFiles, setDownloadingFiles] = useState<Set<string>>(new Set());
-  const [displayResults, setDisplayResults] = useState<ProcessingResults | null>(null);
-  const [isLoadingResults, setIsLoadingResults] = useState(false);
 
-  // Fetch results from API if not provided
-  useEffect(() => {
-    if (results) {
-      setDisplayResults(results);
-    } else {
-      fetchResults();
-    }
-  }, [sessionId, results]);
-
-  const fetchResults = async () => {
-    setIsLoadingResults(true);
-    try {
-      const apiResults = await apiService.get<ProcessingResults>(`${API_ENDPOINTS.SESSION}/${sessionId}/results`);
-      setDisplayResults(apiResults);
-    } catch (error) {
-      console.error('Failed to fetch results:', error);
-      toast.error('Failed to load results. Please try refreshing.');
-      // Use fallback mock results if API fails
-      setDisplayResults({
-        sessionId,
-        status: 'success',
-        phasesCompleted: ['Phase A', 'Phase B', 'Phase C', 'Phase D', 'Phase E', 'Phase F'],
-        generatedFiles: [],
-        summary: {
-          workflowsProcessed: 0,
-          sessionsProcessed: 0,
-          sqlFilesGenerated: 0,
-          testFilesGenerated: 0,
-          errorsFound: 1,
-          warningsFound: 0,
-          processingTimeMs: 0,
-        },
-      });
-    } finally {
-      setIsLoadingResults(false);
-    }
+  // Mock results if not provided (for development)
+  const mockResults: ProcessingResults = {
+    sessionId,
+    status: 'success',
+    phasesCompleted: ['Phase A', 'Phase B', 'Phase C', 'Phase D', 'Phase E', 'Phase F'],
+    generatedFiles: [
+      {
+        id: 'readme-1',
+        name: 'Wf_vw1708_JBA_Outbound_file_details_readme.md',
+        type: 'readme',
+        phase: 'Phase A',
+        size: 15240,
+        path: '/generated/readme.md',
+        createdAt: new Date(),
+        preview: '# Workflow Overview\n\nThis workflow processes JBA outbound file details...',
+      },
+      {
+        id: 'param-1',
+        name: 'UVW1708.param',
+        type: 'param',
+        phase: 'Phase B',
+        size: 2048,
+        path: '/generated/params.param',
+        createdAt: new Date(),
+      },
+      {
+        id: 'sql-1',
+        name: 'S_vw1708_JBA_Outbound_file_details_generated.snowsql',
+        type: 'snowsql',
+        phase: 'Phase C',
+        size: 8945,
+        path: '/generated/session1.sql',
+        createdAt: new Date(),
+        preview: '-- Generated Snowflake SQL\nCREATE OR REPLACE TRANSIENT TABLE STAGING.n_JBA_Outbound_file_details (\n    field1 VARCHAR(255),\n    field2 VARCHAR(100)\n);',
+      },
+      {
+        id: 'test-1',
+        name: 'S_vw1708_JBA_Outbound_file_details_test.snowsql',
+        type: 'test',
+        phase: 'Phase D',
+        size: 3245,
+        path: '/generated/test1.sql',
+        createdAt: new Date(),
+      },
+      {
+        id: 'yaml-1',
+        name: 'snowflake.yml',
+        type: 'yaml',
+        phase: 'Phase E',
+        size: 1854,
+        path: '/generated/config.yml',
+        createdAt: new Date(),
+        preview: 'definition_version: 2\nenv:\n  LANDING_STAGE: PUBLIC.BA_INTERNAL_STAGE_FW\n  session1_inputfile: /data/input.csv',
+      },
+      {
+        id: 'csv-1',
+        name: 'n_JBA_Outbound_file_details.csv',
+        type: 'csv',
+        phase: 'Phase F',
+        size: 521,
+        path: '/generated/test_data.csv',
+        createdAt: new Date(),
+      },
+    ],
+    summary: {
+      workflowsProcessed: 1,
+      sessionsProcessed: 2,
+      sqlFilesGenerated: 2,
+      testFilesGenerated: 2,
+      errorsFound: 0,
+      warningsFound: 1,
+      processingTimeMs: 285000,
+    },
   };
 
-  if (isLoadingResults || !displayResults) {
-    return (
-      <div className={`flex items-center justify-center py-12 ${className}`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="text-secondary-600 mt-4">Loading results...</p>
-        </div>
-      </div>
-    );
-  }
+  const displayResults = results || mockResults;
 
   // Handle file preview
   const handlePreview = async (file: GeneratedFile) => {
@@ -123,9 +147,9 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
 
     setIsLoadingPreview(true);
     try {
-      // Fetch file content from API for preview
-      const content = await apiService.get<string>(`${API_ENDPOINTS.DOWNLOAD}/${sessionId}/files/${file.id}/preview`);
-      setPreviewContent(content);
+      // In a real implementation, this would fetch the file content
+      // For now, show placeholder content
+      setPreviewContent(`// ${file.name}\n// File content would be loaded here...`);
     } catch (error) {
       setPreviewContent('Error loading file preview.');
       console.error('Preview error:', error);
@@ -141,8 +165,21 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
     setDownloadingFiles(prev => new Set(prev).add(file.id));
 
     try {
-      // Download file from API
-      await apiService.downloadFile(`${API_ENDPOINTS.DOWNLOAD}/${sessionId}/files/${file.id}`, file.name);
+      // In a real implementation, this would download from the API
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Mock delay
+
+      // Create mock download
+      const blob = new Blob([previewContent || `Mock content for ${file.name}`], {
+        type: 'text/plain',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
 
       toast.success(`Downloaded ${file.name}`);
       onDownload?.(file.id);
@@ -163,11 +200,7 @@ export const ResultsViewer: React.FC<ResultsViewerProps> = ({
   const handleDownloadAll = async () => {
     try {
       toast.success('Preparing download package...');
-
-      // Download ZIP file containing all generated files
-      await apiService.downloadFile(`${API_ENDPOINTS.DOWNLOAD}/${sessionId}/all`, `${sessionId}-files.zip`);
-
-      toast.success('All files downloaded successfully!');
+      // In a real implementation, this would create a ZIP file
       onDownloadAll?.();
     } catch (error) {
       toast.error('Failed to create download package');
